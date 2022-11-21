@@ -1,5 +1,7 @@
 package com.example.dto;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +15,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
-public class OrderDTO {
-	private int orderId;
-//	private String name;
-	private double price;
-	private UserDTO user;
+@AllArgsConstructor
+public class ProductDTO {
+	
+	private String id;
 	private int productId;
+	private String name;
+	private String description;
+	private BigDecimal price;
+
 }

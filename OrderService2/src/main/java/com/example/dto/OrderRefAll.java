@@ -15,10 +15,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class OrderDTO {
+public class OrderRefAll {
 	private int orderId;
 //	private String name;
-	private double price;
+//	private double price;
 	private UserDTO user;
-	private int productId;
+	private ProductDTO product;
 }

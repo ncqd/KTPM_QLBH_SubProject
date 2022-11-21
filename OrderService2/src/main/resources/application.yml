@@ -14,7 +14,7 @@ management:
 resilience4j:
   circuitbreaker:
     instances:
-      serviceUser:
+      serviceOrder:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
         failureRateThreshold: 50
@@ -27,13 +27,13 @@ resilience4j:
     
   retry:
     instances:
-      serviceUser:
+      serviceOrder:
         maxRetryAttempts: 5
         waitDuration: 10s
         
   ratelimiter:
     instances:
-      serviceUser:
+      serviceOrder:
         registerHealthIndicator: false
         limitForPeriod: 10
         limitRefreshPeriod: 12s

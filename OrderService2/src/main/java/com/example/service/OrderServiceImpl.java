@@ -15,6 +15,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.dto.UserDTO;
 import com.example.dto.OrderDTO;
+import com.example.dto.OrderDTORefProductDTO;
+import com.example.dto.OrderRefAll;
+import com.example.dto.ProductDTO;
 import com.example.entity.Order;
 import com.example.repository.OrderRepository;
 
@@ -69,16 +72,81 @@ public class OrderServiceImpl implements OrderService {
 					 UserDTO.class
 					).getBody();
 
-		OrderDTO result = new OrderDTO(order.getOrderId(), order.getName(), order.getPrice(), customerDto);
+		OrderDTO result = new OrderDTO(order.getOrderId(), order.getPrice(), customerDto, order.getProductId());
 		return result;
 	}
+	@Override
+	public OrderDTORefProductDTO getOrderByIdProduct(int id) {
+		// TODO Auto-generated method stub
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    HttpEntity<String> entity = new HttpEntity<String>(headers);
+	    Order order = orderRepository.findById(id).get();
+		// goi service customer
+		ProductDTO customerDto = oauth2RestTemplate.exchange("http://localhost:9003/api/product"
+	    		  .concat("/")
+	    		  .concat(String.valueOf(order.getUserId())),
+	    		  	HttpMethod.GET, 
+					 entity, 
+					 ProductDTO.class
+					).getBody();
+//		customerDt
+		
+		OrderDTORefProductDTO result = new OrderDTORefProductDTO(order.getOrderId(),  
+				order.getUserId(), customerDto);
+		return result;
+//		return null;
+	}
 	
-	
+	@Override
+	public OrderRefAll getOrderByIdGetAll(int id) {
+		// TODO Auto-generated method stub
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    HttpEntity<String> entity = new HttpEntity<String>(headers);
+	    Order order = orderRepository.findById(id).get();
+		// goi service customer
+		ProductDTO productDto = oauth2RestTemplate.exchange("http://localhost:9003/api/product"
+	    		  .concat("/")
+	    		  .concat(String.valueOf(order.getUserId())),
+	    		  	HttpMethod.GET, 
+					 entity, 
+					 ProductDTO.class
+					).getBody();
+		UserDTO customerDto = oauth2RestTemplate.exchange("http://localhost:9002/api/user"
+	    		  .concat("/")
+	    		  .concat(String.valueOf(order.getUserId())),
+	    		  	HttpMethod.GET, 
+					 entity, 
+					 UserDTO.class
+					).getBody();
+		
+		OrderRefAll result = new OrderRefAll(order.getOrderId(),  
+				customerDto, productDto);
+		return result;
+//		return null;
+	}
 
 	@Override
 	public List<Order> getListOrder() {
 		// TODO Auto-generated method stub
 		return orderRepository.findAll();
+	}
+
+	@Override
+	public ProductDTO getProductById(int id) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    HttpEntity<String> entity = new HttpEntity<String>(headers);
+//	    Order order = orderRepository.findById(id).get();
+	    ProductDTO productDTO = oauth2RestTemplate.exchange("http://localhost:9003/api/product"
+	    		  .concat("/")
+	    		  .concat(String.valueOf(id)),
+	    		  	HttpMethod.GET, 
+					 entity, 
+					 ProductDTO.class
+					).getBody();
+		return productDTO;
 	}
 
 }

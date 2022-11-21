@@ -35,5 +35,6 @@ public class Order {
 	private double price;
 	@Column(name = "userId")
 	private int userId;
-
+	@Column(name= "prductId")
+	private int productId;
 }
