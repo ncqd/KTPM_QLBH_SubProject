@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.example.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
+@EnableCaching
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
@@ -47,7 +49,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}")
-//	@Cacheable(value = "user", key = "#userId")
+	@Cacheable(value = "user", key = "#userId")
 	public User getCustomerById(@PathVariable int userId) {
 		User customer = customerService.getCustomerById(userId);
 		return customer;

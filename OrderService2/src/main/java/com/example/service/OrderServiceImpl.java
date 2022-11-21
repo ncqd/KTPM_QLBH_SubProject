@@ -18,6 +18,10 @@ import com.example.dto.OrderDTO;
 import com.example.entity.Order;
 import com.example.repository.OrderRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 	@Autowired
@@ -27,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
 	private RestTemplate restTemplate;
 	@Autowired
     OAuth2RestTemplate oauth2RestTemplate;
+	
 	
 	@Override
 	public Order addOrder(Order order) {
@@ -56,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
 	    HttpEntity<String> entity = new HttpEntity<String>(headers);
 	    Order order = orderRepository.findById(id).get();
 		// goi service customer
-		UserDTO customerDto = oauth2RestTemplate.exchange("http://localhost:8080/api/user"
+		UserDTO customerDto = oauth2RestTemplate.exchange("http://localhost:9002/api/user"
 	    		  .concat("/")
 	    		  .concat(String.valueOf(order.getUserId())),
 	    		  	HttpMethod.GET, 
@@ -67,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
 		OrderDTO result = new OrderDTO(order.getOrderId(), order.getName(), order.getPrice(), customerDto);
 		return result;
 	}
+	
+	
 
 	@Override
 	public List<Order> getListOrder() {
